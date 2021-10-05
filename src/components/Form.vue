@@ -1,0 +1,152 @@
+<template>
+    <validation-observer v-slot="{ valid }">
+        <form :action="config.action" method="post">
+            <input type="hidden" name="_token" :value="csrf">
+            <div class="row">
+                <div
+                    v-for="control of config.controls"
+                    :class="getColumnSize(control.columnsToTake, control.columnsToTakeOnMobile)"
+                    class="form-group">
+                        <validation-provider
+                            v-slot="v"
+                            :rules="control.jsRules | rules"
+                            :name="control.name"
+                            :customMessages="customErrorMessages[control.name]"
+                        >
+                            <label
+                                :class="control.jsRules.includes('required') ? 'required' : ''">
+                                {{control.label}}
+                            </label>
+                            <reusable-input
+                                v-if="control.type === 'input'"
+                                v-model="control.value"
+                                :disabled="control.disabled"
+                                :type="control.inputType"
+                                :name="control.name"
+                            ></reusable-input>
+                            <reusable-textarea
+                                v-else-if="control.type === 'textarea'"
+                                v-model="control.value"
+                                :disabled="control.disabled"
+                                :maxlength="control.maxLength"
+                                :minlength="control.minLength"
+                                :name="control.name"
+                                :cols="control.cols"
+                                :rows="control.rows">
+                            </reusable-textarea>
+                            <reusable-select
+                                v-else-if="control.type === 'select'"
+                                v-model="control.value"
+                                :disabled="control.disabled"
+                                :name="control.name"
+                                :options="control.options">
+                            </reusable-select>
+                            <reusable-tags-input
+                                v-else-if="control.type === 'multiselect'"
+                                v-model="control.value"
+                                :options="control.options"
+                                :disabled="control.disabled"
+                                :name="control.name">
+                            </reusable-tags-input>
+                            <reusable-image-uploader
+                                v-else-if="control.type === 'galleryUploader'"
+                                v-model="control.value"
+                                :uploadRoute="control.uploadRoute"
+                                :loadRoute="control.loadImagesRoute"
+                                :removeRoute="control.removeImageRoute"
+                                :supportedMimes="control.supportedMimes.split(',')"
+                                :maxImageFileSize="control.maxImageFileSize"
+                            ></reusable-image-uploader>
+                            <span class="form-error">{{ v.errors[0] }}</span>
+                        </validation-provider>
+                </div>
+            </div>
+            <div class="btn-container">
+                <button
+                    v-if="config.submitButton"
+                    :disabled="!valid"
+                    type="submit"
+                    class="btn btn-primary">
+                    {{config.submitButton.text}}
+                </button>
+            </div>
+        </form>
+    </validation-observer>
+</template>
+
+<script>
+import { ValidationProvider, ValidationObserver } from 'vee-validate';
+import CsrfMixin from './../mixins/csrf-mixin';
+import Input from './Input.vue';
+import ImageUploader from './ImageUploader.vue';
+import Select from './Select.vue';
+import SwitchTabs from './SwitchTabs.vue';
+import TagsInput from './TagsInput.vue';
+import Textarea from './Textarea.vue';
+
+export default {
+    data () {
+        return {
+            bindings: {},
+            customErrorMessages: {},
+        };
+    },
+    name: 'reusable-form',
+    components: {
+        ValidationProvider,
+        ValidationObserver,
+        'reusable-input': Input,
+        'reusable-select': Select,
+        'reusable-switch-tabs': SwitchTabs,
+        'reusable-tags-input': TagsInput,
+        'reusable-textarea': Textarea,
+        'reusable-image-uploader': ImageUploader,
+    },
+    mixins: [
+        CsrfMixin,
+    ],
+    props: {
+        config: {
+            type: Object,
+            required: true,
+        },
+    },
+    filters: {
+        rules (rules) {
+            return rules ? rules.join('|') : ''
+        },
+    },
+    created () {
+        this.setCustomValidationMessages(this.config.controls);
+    },
+    methods: {
+        getColumnSize (desktopSize, mobileSize) {
+            return `col-lg-${desktopSize} col-md-${mobileSize}`;
+        },
+        setCustomValidationMessages (controls) {
+            for (const control of controls) {
+                const messages = control.jsErrorMessages;
+                this.customErrorMessages[control.name] = {};
+
+                for (const rule in messages) {
+                    const message = messages[rule];
+                    if (message && message.length > 0) {
+                        this.customErrorMessages[control.name][rule] = message;
+                    }
+                }
+            }
+        },
+    }
+}
+</script>
+
+<style lang="scss" scoped>
+@import './../scss/vue.scss';
+    .btn-container {
+        margin-top: 15px;
+
+        button {
+            display: block;
+        }
+    }
+</style>

@@ -1,0 +1,50 @@
+@import 'variables';
+@import 'mixins';
+
+.form-error {
+  color: #e3342f;
+}
+
+input, textarea, select {
+  &:focus {
+      box-shadow: none!important;
+  }
+  &:disabled {
+      color: #9ba7b2;
+  }
+}
+
+.custom-checkbox {
+  input, select {
+      &:focus  {
+          border: none!important;
+          outline: none!important;
+      }
+  }
+
+  .custom-control-input:checked ~ .custom-control-label::before {
+      background-color: $primary;
+      outline:0!important;
+      box-shadow: none !important;
+      border-radius: 0!important;
+  }
+}
+
+input, select {
+  height: 45px!important;
+}
+input, textarea, select {
+  border-radius: $default-border-radius!important;
+  background-color: $secondary!important;
+  border: none!important;
+}
+
+label {
+  @include md {
+      font-size: 13px;
+  }
+}
+
+.form-group {
+  margin-bottom: 15px!important;
+}
