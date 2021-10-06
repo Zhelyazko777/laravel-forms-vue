@@ -1,50 +1,47 @@
 @import 'variables';
 @import 'mixins';
 
-.form-error {
-  color: #e3342f;
-}
-
-input, textarea, select {
-  &:focus {
-      box-shadow: none!important;
+.reusable-form-control {
+  input, textarea, select {
+    border-radius: $default-border-radius!important;
+    background-color: $secondary-color!important;
+    border: none!important;
+  
+    &:focus {
+        box-shadow: none!important;
+    }
+    &:disabled {
+        color: $disabled-form-control-color;
+    }
   }
-  &:disabled {
-      color: #9ba7b2;
-  }
-}
-
-.custom-checkbox {
   input, select {
-      &:focus  {
-          border: none!important;
-          outline: none!important;
-      }
+    height: 45px!important;
   }
-
-  .custom-control-input:checked ~ .custom-control-label::before {
-      background-color: $primary;
-      outline:0!important;
-      box-shadow: none !important;
-      border-radius: 0!important;
+  label {
+    @include md {
+        font-size: 13px;
+    }
   }
-}
-
-input, select {
-  height: 45px!important;
-}
-input, textarea, select {
-  border-radius: $default-border-radius!important;
-  background-color: $secondary!important;
-  border: none!important;
-}
-
-label {
-  @include md {
-      font-size: 13px;
+  
+  textarea:active,
+  input:active,
+  textarea:focus,
+  input:not([disabled]):focus,
+  select:focus,
+  button:focus,
+  button:active,
+  label:focus,
+  .btn:active,
+  .btn.active
+  {
+      outline: 0!important;
   }
 }
 
-.form-group {
+.reusable-form-group.form-group {
   margin-bottom: 15px!important;
+
+  .form-error {
+    color: $form-control-error-color;
+  }
 }

@@ -3,7 +3,6 @@
 import * as components from '@/components/index';
 import { rules } from './validation-rules';
 
-
 // install function executed by Vue.use()
 const install = function installLaravelFormsVue(Vue) { 
   rules();

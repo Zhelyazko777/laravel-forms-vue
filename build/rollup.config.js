@@ -9,6 +9,7 @@ import replace from '@rollup/plugin-replace';
 import babel from '@rollup/plugin-babel';
 import { terser } from 'rollup-plugin-terser';
 import minimist from 'minimist';
+import css from 'rollup-plugin-css-only';
 
 // Get browserslist config and remove ie from es build targets
 const esbrowserslist = fs.readFileSync('./.browserslistrc')
@@ -40,8 +41,11 @@ const baseConfig = {
     replace: {
       'process.env.NODE_ENV': JSON.stringify('production'),
     },
+    css: {
+      output: 'default-styles.css'
+    },
     vue: {
-      css: true,
+      css: false,
       template: {
         isProduction: true,
       },
@@ -98,6 +102,7 @@ if (!argv.format || argv.format === 'es') {
     plugins: [
       replace(baseConfig.plugins.replace),
       ...baseConfig.plugins.preVue,
+      css(baseConfig.plugins.css),
       vue(baseConfig.plugins.vue),
       ...baseConfig.plugins.postVue,
       babel({

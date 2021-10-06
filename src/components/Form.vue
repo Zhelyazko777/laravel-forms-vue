@@ -6,7 +6,7 @@
                 <div
                     v-for="control of config.controls"
                     :class="getColumnSize(control.columnsToTake, control.columnsToTakeOnMobile)"
-                    class="form-group">
+                    class="reusable-form-group form-group">
                         <validation-provider
                             v-slot="v"
                             :rules="control.jsRules | rules"

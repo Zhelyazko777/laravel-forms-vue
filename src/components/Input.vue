@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="reusable-form-control">
         <input
             v-model="binding"
             :min="min"
@@ -35,9 +35,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
-input {
 @import './../scss/vue.scss';
+input {
     @include md {
         font-size: .9em;
     }

@@ -206,7 +206,7 @@
         display: flex;
         flex-direction: column;
         justify-content: center;
-        background-color: $secondary;
+        background-color: $secondary-color;
         min-height: 250px;
 
         @include md {
@@ -271,7 +271,7 @@
 
             .upload-link {
                 text-decoration: underline;
-                color: $primary;
+                color: $primary-color;
                 cursor: pointer;
             }
             .instructions-text {

@@ -76,7 +76,7 @@ export default {
 @import './../scss/vue.scss';
     .switch-container {
         .slider {
-            background-color: $secondary;
+            background-color: $secondary-color;
             width: 100%;
             border-radius: 22px;
             height: 45px;
@@ -111,7 +111,7 @@ export default {
                 position: absolute;
                 top: 0;
                 left: 0;
-                background-color: $primary;
+                background-color: $primary-color;
                 border-radius: 22px;
                 width: 50%;
                 height: 100%;
