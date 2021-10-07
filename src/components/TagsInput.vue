@@ -6,14 +6,14 @@
             @change="onSelectChange"
             class="form-control">
                 <option value="" :selected="selectValue == null" disabled>{{ placeholder }}</option>
-                <option v-for="option in notSelectedOptions" :value="option.value">
+                <option v-for="option in notSelectedOptions" :key="option.value" :value="option.value">
                     {{ option.text }}
                 </option>
         </select>
         <div class="labels-container" :class="isThereNotSelectedOptions ? 'mt-3' : ''">
-            <span class="badge badge-primary" v-for="selectedOption in selectedOptions">
+            <span class="badge badge-primary" v-for="selectedOption in selectedOptions" :key="selectedOption.value">
                 {{ selectedOption.text }}
-                <i class="fas fa-times pointer" @click="onTagRemoveClick(selectedOption.value)"></i>
+                <i class="fas fa-times" @click="onTagRemoveClick(selectedOption.value)"></i>
             </span>
         </div>
 
@@ -24,6 +24,7 @@
             hidden>
             <option
                 v-for="option in options"
+                :key="option.value"
                 :selected="binding.some(x => x.value == option.value)"
                 :value="option.value">
             </option>
@@ -77,9 +78,8 @@ export default {
     methods: {
         onSelectChange ($event) {
             const chosenOption = this.selectOptions.filter(o => o.value == $event.target.value)[0];
-            this.binding.push(chosenOption);
+            this.binding = [...this.binding, chosenOption];
             this.selectValue = null;
-            this.$forceUpdate();
         },
         onTagRemoveClick (optionValue) {
             const optionToRemoveIndex = this.binding.findIndex(o => o.value === optionValue);
@@ -91,18 +91,19 @@ export default {
 
 <style lang="scss" scoped>
 @import './../scss/vue.scss';
-    .labels-container {
-        span {
-            margin: 6px;
-            font-size: 14px;
-            padding: 7px 10px;
-            color: white;
-            border-radius: 22px;
+.labels-container {
+    span {
+        margin: 6px;
+        font-size: 14px;
+        padding: 7px 10px;
+        color: white;
+        border-radius: 22px;
 
-            i {
-                margin-left: 5px;
-                font-size: 13px;
-            }
+        i {
+            margin-left: 5px;
+            font-size: 13px;
+            cursor: pointer;
         }
     }
+}
 </style>

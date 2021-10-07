@@ -17,21 +17,21 @@
                 <img :src="imageUrl.src" :srcset="imageUrl.srcSet">
                 <div class="profile-image-overlay justify-content-center align-items-center flex-column">
                     <div class="text-center image-delete-container" @click="onImageRemove(imageUrl.id)">
-                        <font-awesome-icon size="2x" icon="times" />
-                        <p>{{__component('form/image_uploader.uploaded_image_delete_text')}}</p>
+                        <i class="fas fa-times"></i>
+                        <p>{{tranlsations.imageUploaderDeleteImageText}}</p>
                     </div>
                 </div>
             </div>
             <div class="d-flex justify-content-center align-items-center align-content-center flex-column w-100 mt-5 mb-5">
-                <div>
-                    <font-awesome-icon size="4x" icon="image" />
+                <div class="image-icon-container">
+                    <i class="fas fa-images"></i>
                 </div>
                 <p class="m-0 instructions-text">
-                    {{__component('form/image_uploader.upload_instructions')}}
+                    {{tranlsations.imageUploaderInstructions}}
                     <span
                         class="upload-link"
                         @click="onPortfolioUploadClick">
-                        {{__component('form/image_uploader.upload_click_text')}}
+                        {{tranlsations.imageUploaderClickToUploadText}}
                     </span>
                 </p>
                 <div class="errors mt-2">
@@ -54,10 +54,7 @@
               images: [],
               loading: false,
               error: undefined,
-              httpHaders: {
-                'X-CSRF-TOKEN': documnet.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-                'X-Requested-With': 'XMLHttpRequest',
-              }
+              tranlsations: this.$laravelFormsConfig.componentTranslations,
           }
         },
         props: {
@@ -91,6 +88,12 @@
             }
         },
         methods: {
+            getHttpHeaders() {
+                return {
+                  'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                  'X-Requested-With': 'XMLHttpRequest',
+                };
+            },
             onPortfolioUploadClick () {
               this.$refs.portfolioInput.click();
             },
@@ -137,7 +140,7 @@
 
                 fetch(this.uploadRoute, {
                     method: "POST",
-                    headers: this.httpHaders,
+                    headers: this.getHttpHeaders(),
                     body: formData,
                 })
                     .then(response => response.json())
@@ -168,7 +171,7 @@
 
                 fetch(url, {
                     method: "POST",
-                    headers: this.httpHaders,
+                    headers: this.getHttpHeaders(),
                 })
                     .then(response => response.json())
                     .then(result => {
@@ -183,7 +186,7 @@
                 this.loading = true;
                 fetch(this.loadRoute, {
                     method: "GET",
-                    headers: this.httpHaders,
+                    headers: this.getHttpHeaders(),
                 })
                     .then(response => response.json())
                     .then(result => {
@@ -215,6 +218,9 @@
         .nested-container {
             min-height: inherit;
 
+            .image-icon-container i {
+                font-size: 4rem;
+            }
             .loading-spinner-container {
                 position: absolute;
                 width: 100%;
@@ -259,6 +265,10 @@
 
                     .image-delete-container {
                         cursor: pointer;
+
+                        i {
+                          font-size: 2rem;
+                        }
                     }
                 }
 

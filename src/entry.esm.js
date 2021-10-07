@@ -1,14 +1,20 @@
 
 // Import vue components
 import * as components from '@/components/index';
-import { rules } from './validation-rules';
+import { initRules } from './validation-rules';
+import { localize }  from 'vee-validate';
 
 // install function executed by Vue.use()
-const install = function installLaravelFormsVue(Vue) { 
-  rules();
+const install = function installLaravelFormsVue(Vue, options) {
+  initRules();
+  localize(options.veeDefaultLocale, require(`vee-validate/dist/locale/${options.veeDefaultLocale}.json`));
+  localize(options.veeTranslations); 
+  Vue.prototype.$laravelFormsConfig = {
+    componentTranslations: options.componentTranslations,
+  };
   Object.entries(components).forEach(([componentName, component]) => {
     Vue.component(componentName, component);
-  });
+  }); 
 };
 
 // Create module definition for Vue.use()

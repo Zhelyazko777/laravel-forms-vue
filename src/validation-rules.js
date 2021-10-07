@@ -1,7 +1,7 @@
 import { extend } from 'vee-validate';
 import { required, ext, numeric, min_value, min, max } from 'vee-validate/dist/rules';
 
-export const rules = () => {
+export const initRules = () => {
   extend('min', min);
   extend('max', max);
   extend('required', required);

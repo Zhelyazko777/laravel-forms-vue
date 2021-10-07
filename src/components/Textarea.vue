@@ -20,7 +20,7 @@
         </textarea>
 
         <div v-if="maxlength" class="char-counter mt-1 text-right">
-            {{i18n('chars_left')}}: {{maxlength - charsTyped}} / {{maxlength}}
+            {{tranlsations.textSymbolsCounterText}}: {{maxlength - charsTyped}} / {{maxlength}}
         </div>
     </div>
 </template>
@@ -31,7 +31,7 @@ import FormInputMixin from './../mixins/form-input-mixin';
 export default {
     data () {
       return {
-          translationsPath: 'vue_components/form/textarea',
+          tranlsations: this.$laravelFormsConfig.componentTranslations,
       };
     },
     mixins: [
