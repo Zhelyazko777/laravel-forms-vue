@@ -17,11 +17,6 @@
   input, select {
     height: 45px!important;
   }
-  label {
-    @include md {
-        font-size: 13px;
-    }
-  }
   
   textarea:active,
   input:active,
@@ -41,7 +36,19 @@
 .reusable-form-group.form-group {
   margin-bottom: 15px!important;
 
+  label {
+    @include md {
+        font-size: 13px;
+    }
+    
+    &.required::after {
+        content: ' *';
+        color: $red;
+    }
+  }
   .form-error {
     color: $form-control-error-color;
   }
 }
+
+

@@ -5,16 +5,17 @@
             <div class="row">
                 <div
                     v-for="control of config.controls"
+                    :key="control.name"
                     :class="getColumnSize(control.columnsToTake, control.columnsToTakeOnMobile)"
                     class="reusable-form-group form-group">
                         <validation-provider
                             v-slot="v"
-                            :rules="control.jsRules | rules"
+                            :rules="control.rules | rules(ruleBindings)"
                             :name="control.name"
                             :customMessages="customErrorMessages[control.name]"
                         >
                             <label
-                                :class="control.jsRules.includes('required') ? 'required' : ''">
+                                :class="control.rules.includes('required') ? 'required' : ''">
                                 {{control.label}}
                             </label>
                             <reusable-input
@@ -89,6 +90,19 @@ export default {
         return {
             bindings: {},
             customErrorMessages: {},
+            ruleBindings: {
+                'gt': { 
+                  name: 'max_min_price',
+                  argumentsPrefix: ':@',
+                },
+                'lt': { 
+                  name: 'min_max_price',
+                  argumentsPrefix: ':@',
+                },
+                'Phone': { 
+                  name: 'phone',
+                },
+            }
         };
     },
     name: 'reusable-form',
@@ -112,8 +126,24 @@ export default {
         },
     },
     filters: {
-        rules (rules) {
-            return rules ? rules.join('|') : ''
+        rules (rules, ruleBindings) {
+            if (!rules) {
+                return undefined;
+            }
+            
+            return rules
+              .map((rule) => {
+                const ruleParts = rule.split(':');
+                const ruleName = ruleParts[0];
+                const ruleValue = ruleParts[1];
+                const jsRule = ruleBindings[ruleName];
+                if (!jsRule) {
+                    return rule;
+                }
+            
+                return ruleValue ? jsRule.name + jsRule.argumentsPrefix + ruleValue : jsRule.name;
+              })
+              .join('|');
         },
     },
     created () {
@@ -125,13 +155,17 @@ export default {
         },
         setCustomValidationMessages (controls) {
             for (const control of controls) {
-                const messages = control.jsErrorMessages;
+                const messages = control.clientErrorMessages;
                 this.customErrorMessages[control.name] = {};
 
                 for (const rule in messages) {
                     const message = messages[rule];
                     if (message && message.length > 0) {
-                        this.customErrorMessages[control.name][rule] = message;
+                        let jsRuleName = this.ruleBindings[rule]?.name;
+                        if (!jsRuleName) {
+                            jsRuleName = rule;
+                        }
+                        this.customErrorMessages[control.name][jsRuleName] = message;
                     }
                 }
             }
