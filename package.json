@@ -10,7 +10,7 @@
     "url": "git+https://github.com/Zhelyazko777/laravel-forms-vue.git"
   },
   "version": "1.0.3",
-  "description": "Frontend represenation of the laravel-forms package", 
+  "description": "Frontend represenation of the laravel-forms package",
   "main": "dist/laravel-forms-vue.ssr.js",
   "browser": "dist/laravel-forms-vue.esm.js",
   "module": "dist/laravel-forms-vue.esm.js",

@@ -1,5 +1,5 @@
 <template>
-    <validation-observer v-slot="{ valid }">
+    <validation-observer v-slot="{valid, dirty}">
         <form :action="config.action" method="post">
             <input type="hidden" name="_token" :value="csrf">
             <div class="row">
@@ -10,8 +10,8 @@
                     class="reusable-form-group form-group">
                         <validation-provider
                             v-slot="v"
-                            :rules="control.rules | rules(ruleBindings)"
-                            :name="control.name"
+                            :rules="control.rules | rules(ruleBindings, rulesToSkip)"
+                            :name="control.label"
                             :customMessages="customErrorMessages[control.name]"
                         >
                             <label
@@ -65,7 +65,7 @@
             <div class="btn-container">
                 <button
                     v-if="config.submitButton"
-                    :disabled="!valid"
+                    :disabled="!valid || !dirty"
                     type="submit"
                     class="btn btn-primary">
                     {{config.submitButton.text}}
@@ -76,7 +76,6 @@
 </template>
 
 <script>
-import { ValidationProvider, ValidationObserver } from 'vee-validate';
 import CsrfMixin from './../mixins/csrf-mixin';
 import Input from './Input.vue';
 import ImageUploader from './ImageUploader.vue';
@@ -88,27 +87,21 @@ import Textarea from './Textarea.vue';
 export default {
     data () {
         return {
+          test: '',
             bindings: {},
             customErrorMessages: {},
             ruleBindings: {
-                'gt': { 
-                  name: 'max_min_price',
-                  argumentsPrefix: ':@',
-                },
-                'lt': { 
-                  name: 'min_max_price',
-                  argumentsPrefix: ':@',
-                },
-                'Phone': { 
-                  name: 'phone',
-                },
-            }
+                'gt': 'max_min_price',
+                'lt': 'min_max_price',
+                'Phone': 'phone',
+            },
+            rulesToSkip: [
+              'exists',
+            ]
         };
     },
     name: 'reusable-form',
     components: {
-        ValidationProvider,
-        ValidationObserver,
         'reusable-input': Input,
         'reusable-select': Select,
         'reusable-switch-tabs': SwitchTabs,
@@ -126,7 +119,7 @@ export default {
         },
     },
     filters: {
-        rules (rules, ruleBindings) {
+        rules (rules, ruleBindings, rulesToSkip) {
             if (!rules) {
                 return undefined;
             }
@@ -135,14 +128,28 @@ export default {
               .map((rule) => {
                 const ruleParts = rule.split(':');
                 const ruleName = ruleParts[0];
-                const ruleValue = ruleParts[1];
-                const jsRule = ruleBindings[ruleName];
-                if (!jsRule) {
-                    return rule;
+                if (rulesToSkip && rulesToSkip.includes(ruleName)) {
+                    return undefined;
                 }
-            
-                return ruleValue ? jsRule.name + jsRule.argumentsPrefix + ruleValue : jsRule.name;
+                
+                if (ruleParts.length > 1) {
+                    const ruleValue = ruleParts[1];
+                    let jsRule = ruleBindings[ruleName];
+                    if (!jsRule) {
+                        jsRule = rule;
+                    }
+
+                    return jsRule + ':@' + ruleValue
+                } else {
+                    let jsRule = ruleBindings[ruleName]
+                    if (!jsRule) {
+                        jsRule = rule;
+                    }
+
+                    return jsRule;
+                }
               })
+              .filter(r => !!r)
               .join('|');
         },
     },
