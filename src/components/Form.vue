@@ -1,6 +1,6 @@
 <template>
     <validation-observer v-slot="{valid, dirty}">
-        <form :action="config.action" method="post">
+        <form :action="config.action" @submit="onFormSubmit" method="post">
             <input type="hidden" name="_token" :value="csrf">
             <div class="row">
                 <div
@@ -87,7 +87,6 @@ import Textarea from './Textarea.vue';
 export default {
     data () {
         return {
-          test: '',
             bindings: {},
             customErrorMessages: {},
             ruleBindings: {
@@ -157,6 +156,14 @@ export default {
         this.setCustomValidationMessages(this.config.controls);
     },
     methods: {
+        onFormSubmit ($event) {
+          if (this.config.callback && !this.config.action) {
+            $event.preventDefault();
+            window[this.config.callback](
+              this.config.controls.map(c => { return { name: c.name, value: c.value }; })
+            );
+          }
+        },
         getColumnSize (desktopSize, mobileSize) {
             return `col-lg-${desktopSize} col-md-${mobileSize}`;
         },
