@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="reusable-form-control">
         <select
             v-if="isThereNotSelectedOptions"
             :value="selectValue"

@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="reusable-form-control">
         <select v-model="binding" class="form-control" :disabled="disabled">
             <option
                 v-for="option of options"
@@ -34,6 +34,7 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss" scoped>
+@import './../scss/vue.scss';
 
 </style>

@@ -1,5 +1,5 @@
 <template>
-    <div class="switch-container">
+    <div class="switch-container reusable-form-control">
         <div class="slider">
             <div class="d-flex align-items-center justify-content-around h-100">
                 <div @click="onLeftSideClick"
