@@ -154,11 +154,6 @@ export default {
     created () {
         this.setCustomValidationMessages(this.config.controls);
     },
-    watch: { 
-      config: function(newVal, oldVal) { // watch it
-        console.log('Prop changed: ', newVal, ' | was: ', oldVal)
-      }
-    },
     methods: {
         onFormSubmit ($event) {
           if (this.config.callback && !this.config.action) {
