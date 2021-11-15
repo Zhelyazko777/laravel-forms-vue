@@ -24,6 +24,9 @@ export default {
         }
     },
     watch: {
+        value (newVal) {
+          this.binding = newVal;
+        },
         binding (newVal) {
             this.$emit('input', newVal);
         }

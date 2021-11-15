@@ -6,7 +6,7 @@
                 <div
                     v-for="control of config.controls"
                     :key="control.name"
-                    :class="getColumnSize(control.columnsToTake, control.columnsToTakeOnMobile)"
+                    :class="getColumnSize(control.columnsToTake, control.columnsToTakeOnMobile) + (control.hidden ? ' d-none' : '')"
                     class="reusable-form-group form-group">
                         <validation-provider
                             v-slot="v"
@@ -87,7 +87,6 @@ import Textarea from './Textarea.vue';
 export default {
     data () {
         return {
-            bindings: {},
             customErrorMessages: {},
             ruleBindings: {
                 'gt': 'max_min_price',
@@ -154,6 +153,11 @@ export default {
     },
     created () {
         this.setCustomValidationMessages(this.config.controls);
+    },
+    watch: { 
+      config: function(newVal, oldVal) { // watch it
+        console.log('Prop changed: ', newVal, ' | was: ', oldVal)
+      }
     },
     methods: {
         onFormSubmit ($event) {
