@@ -7,6 +7,7 @@
             :type="type"
             :placeholder="placeholder"
             :disabled="disabled"
+            step="any"
             class="form-control"/>
         <input type="text" :value="binding" :name="name" hidden/>
     </div>

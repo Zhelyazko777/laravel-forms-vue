@@ -1,5 +1,5 @@
 <template>
-    <validation-observer v-slot="{valid, dirty}">
+    <validation-observer ref="observer" v-slot="{valid, dirty}">
         <form :action="config.action" @submit="onFormSubmit" method="post">
             <input type="hidden" name="_token" :value="csrf">
             <div class="row">
@@ -183,6 +183,14 @@ export default {
                 }
             }
         },
+        reset() {
+          for (const control of this.config.controls) {
+            if (!control.hidden) {
+              control.value = undefined;
+            }
+          }
+          this.$refs.observer.reset();
+        }
     }
 }
 </script>
