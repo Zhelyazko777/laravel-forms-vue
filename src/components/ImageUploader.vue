@@ -46,8 +46,6 @@
 </template>
 
 <script>
-    import { Circle } from 'vue-loading-spinner';
-
     export default {
         data () {
           return {
@@ -78,9 +76,6 @@
             maxImageFileSize: {
                 type: Number,
             },
-        },
-        components: {
-            'loading-spinner': Circle
         },
         created () {
             if (this.loadRoute && this.loadRoute.length > 0) {

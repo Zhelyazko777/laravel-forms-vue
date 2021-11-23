@@ -1,4 +1,5 @@
 /* eslint-disable import/prefer-default-export */
+export { default as LoadingSpinner } from './LoadingSpinner.vue';
 export { default as ReusableForm } from './Form.vue';
 export { default as ReusableImageUploader } from './ImageUploader.vue';
 export { default as ReusableInput } from './Input.vue';

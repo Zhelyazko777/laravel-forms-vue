@@ -11,7 +11,7 @@
                         <validation-provider
                             v-slot="v"
                             :rules="control.rules | rules(ruleBindings, rulesToSkip)"
-                            :name="control.label"
+                            :name="control.name"
                             :customMessages="customErrorMessages[control.name]"
                         >
                             <label
@@ -88,11 +88,7 @@ export default {
     data () {
         return {
             customErrorMessages: {},
-            ruleBindings: {
-                'gt': 'max_min_price',
-                'lt': 'min_max_price',
-                'Phone': 'phone',
-            },
+            ruleBindings: {},
             rulesToSkip: [
               'exists',
             ]
@@ -134,7 +130,7 @@ export default {
                     const ruleValue = ruleParts[1];
                     let jsRule = ruleBindings[ruleName];
                     if (!jsRule) {
-                        jsRule = rule;
+                        jsRule = ruleName;
                     }
 
                     return jsRule + ':@' + ruleValue

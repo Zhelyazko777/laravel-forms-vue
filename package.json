@@ -9,7 +9,7 @@
     "type": "git",
     "url": "git+https://github.com/Zhelyazko777/laravel-forms-vue.git"
   },
-  "version": "1.0.4",
+  "version": "1.0.6",
   "description": "Frontend represenation of the laravel-forms package",
   "main": "dist/laravel-forms-vue.ssr.js",
   "browser": "dist/laravel-forms-vue.esm.js",
@@ -27,9 +27,6 @@
     "build:ssr": "cross-env NODE_ENV=production rollup --config build/rollup.config.js --format cjs",
     "build:es": "cross-env NODE_ENV=production rollup --config build/rollup.config.js --format es",
     "build:unpkg": "cross-env NODE_ENV=production rollup --config build/rollup.config.js --format iife"
-  },
-  "dependencies": {
-    "vue-loading-spinner": "^1.0.11"
   },
   "devDependencies": {
     "@babel/core": "^7.14.6",
