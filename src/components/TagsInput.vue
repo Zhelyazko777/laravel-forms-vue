@@ -25,7 +25,7 @@
             <option
                 v-for="option in options"
                 :key="option.value"
-                :selected="binding.some(x => x.value == option.value)"
+                :selected="binding.some(x => x == option.value)"
                 :value="option.value">
             </option>
         </select>
@@ -62,27 +62,27 @@ export default {
         placeholder: {
             type: String,
             default: '',
-        }
+        },
     },
     computed: {
         notSelectedOptions () {
-            return this.selectOptions.filter(o => !this.binding.some(x => x.value == o.value));
+            return this.selectOptions.filter(o => !this.binding.some(x => x == o.value));
         },
         isThereNotSelectedOptions () {
             return this.notSelectedOptions.length > 0;
         },
         selectedOptions () {
-            return this.selectOptions.filter(o => this.binding.some(x => x.value == o.value));
+            return this.selectOptions.filter(o => this.binding.some(x => x == o.value));
         }
     },
     methods: {
         onSelectChange ($event) {
             const chosenOption = this.selectOptions.filter(o => o.value == $event.target.value)[0];
-            this.binding = [...this.binding, chosenOption];
+            this.binding = [...this.binding, chosenOption.value];
             this.selectValue = null;
         },
         onTagRemoveClick (optionValue) {
-            const optionToRemoveIndex = this.binding.findIndex(o => o.value === optionValue);
+            const optionToRemoveIndex = this.binding.findIndex(o => o === optionValue);
             this.binding.splice(optionToRemoveIndex, 1);
         }
     },

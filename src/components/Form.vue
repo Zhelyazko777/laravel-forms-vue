@@ -9,8 +9,9 @@
                     :class="getColumnSize(control.columnsToTake, control.columnsToTakeOnMobile) + (control.hidden ? ' d-none' : '')"
                     class="reusable-form-group form-group">
                         <validation-provider
+                            v-if="control.type !== 'galleryUploader'"
                             v-slot="v"
-                            :rules="control.rules | rules(ruleBindings, rulesToSkip)"
+                            :rules="control.rules | rules(ruleBindings, rulesToSkip, config.controls)"
                             :name="control.name"
                             :customMessages="customErrorMessages[control.name]"
                         >
@@ -49,17 +50,18 @@
                                 :disabled="control.disabled"
                                 :name="control.name">
                             </reusable-tags-input>
-                            <reusable-image-uploader
-                                v-else-if="control.type === 'galleryUploader'"
-                                v-model="control.value"
-                                :uploadRoute="control.uploadRoute"
-                                :loadRoute="control.loadImagesRoute"
-                                :removeRoute="control.removeImageRoute"
-                                :supportedMimes="control.supportedMimes.split(',')"
-                                :maxImageFileSize="control.maxImageFileSize"
-                            ></reusable-image-uploader>
                             <span class="form-error">{{ v.errors[0] }}</span>
                         </validation-provider>
+
+                        <reusable-image-uploader
+                            v-else
+                            v-model="control.value"
+                            :uploadRoute="control.uploadRoute"
+                            :loadRoute="control.loadImagesRoute"
+                            :removeRoute="control.removeImageRoute"
+                            :supportedMimes="control.supportedMimes.split(',')"
+                            :maxImageFileSize="control.maxImageFileSize"
+                        ></reusable-image-uploader>
                 </div>
             </div>
             <div class="btn-container">
@@ -113,13 +115,13 @@ export default {
         },
     },
     filters: {
-        rules (rules, ruleBindings, rulesToSkip) {
+        rules (rules, ruleBindings, rulesToSkip, controls) {
             if (!rules) {
                 return undefined;
             }
             
             return rules
-              .map((rule) => {
+              .map(rule => {
                 const ruleParts = rule.split(':');
                 const ruleName = ruleParts[0];
                 if (rulesToSkip && rulesToSkip.includes(ruleName)) {
@@ -127,13 +129,23 @@ export default {
                 }
                 
                 if (ruleParts.length > 1) {
-                    const ruleValue = ruleParts[1];
+                    let ruleValue = ruleParts[1];
                     let jsRule = ruleBindings[ruleName];
                     if (!jsRule) {
                         jsRule = ruleName;
                     }
 
-                    return jsRule + ':@' + ruleValue
+                    ruleValue = ruleValue
+                      .split(',')
+                      .map(param => {
+                        if (controls.find(c => c.name === param.trim())) {
+                          return '@' + param;
+                        }
+                        return param;
+                      })
+                      .join(',');
+
+                    return jsRule + ':' + ruleValue
                 } else {
                     let jsRule = ruleBindings[ruleName]
                     if (!jsRule) {
