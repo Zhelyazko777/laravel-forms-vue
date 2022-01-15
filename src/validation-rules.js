@@ -10,7 +10,7 @@ export const initRules = () => {
   extend('numeric', numeric);
   extend('Phone',  {
       validate: value => {
-          return /^(\+)?(359|0)8[0-9]{8}$/.test(value);
+          return /^(\+)?(359|0)(8|9)[0-9]{8}$/.test(value);
       },
       message: 'Въведеният телефон е невалиден'
   });
